@@ -1,5 +1,25 @@
- server:
+spring:
+    profiles:
+        active: local
+    application:
+        name: user-api
+    h2:
+        console:
+            enabled: true
+            path: /h2-console
+        datasource:
+            url: jdbc:h2:mem:testdb
+            username: sa
+            password:
+            driver-class-name: org.h2.driver
+    jpa:
+        show-sql: true
+        properties:
+            hibernate:
+                format_sql: true
+server:
     port: ${PORT:8080}
-#spring:
-#    application:
-#        name: demo-api
+eureka:
+    client:
+        service-url:
+            default-zone: http://localhost:8761/eureka

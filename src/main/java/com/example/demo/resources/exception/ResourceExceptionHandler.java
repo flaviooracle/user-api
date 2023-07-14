@@ -25,4 +25,13 @@ public class ResourceExceptionHandler
                                                                 HttpStatus.NOT_FOUND.value(),
                                                                 request.getRequestURI()));
     }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<StandardError> objectNotFound(DataIntegrityViolationException ex, HttpServletRequest request)
+    {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new StandardError(LocalDateTime.now(),
+                ex.getMessage(),
+                HttpStatus.BAD_REQUEST.value(),
+                request.getRequestURI()));
+    }
 }
