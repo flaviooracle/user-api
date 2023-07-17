@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.modelmapper.ModelMapper;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
@@ -16,6 +17,7 @@ import java.util.Optional;
 
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.anyLong;
 import static org.mockito.Mockito.when;
 
@@ -27,10 +29,13 @@ class UserServiceImplTest {
     public static final String MAIL = "flavioaom@yahoo.com.br";
     public static final String PASSWORD = "12345";
     public static final double HOURLY_PRICE = 10.0;
+    public static final String FLAVIO_N_ENCONTREI_NADA = "Flavio, Não encontrei nada";
     @InjectMocks
     private UserServiceImpl userService;
     @Mock
     private UserRepository userRepository;
+    @Mock
+    private ModelMapper mapper;
 
     private User user;
     private UserDto userDto;
@@ -60,14 +65,14 @@ class UserServiceImplTest {
 
     @Test
     void WhenFindByIdNotFindException(){
-        when(userRepository.findById(anyLong())).thenThrow(new ObjectNotFoundException("Flavio, Não encontrei nada"));
+        when(userRepository.findById(anyLong())).thenThrow(new ObjectNotFoundException(FLAVIO_N_ENCONTREI_NADA));
 
         try{
             userService.findById(ID);
         }
         catch(Exception ex){
             assertEquals(ObjectNotFoundException.class, ex.getClass());
-            assertEquals(ex.getMessage(), "Flavio, Não encontrei nada");
+            assertEquals(ex.getMessage(), FLAVIO_N_ENCONTREI_NADA);
         }
     }
 
@@ -81,8 +86,28 @@ class UserServiceImplTest {
         List<User> response = userService.findAll();
 //        // Verifico
         assertNotNull(response);
-        assertEquals(listUser.getClass(), response.getClass());
-        assertEquals(listUser.get(0).getName(), response.get(0).getName());
+        assertEquals(listUser.getClass(), response.getClass()); // verifico se é uma lista do tipo
+        assertEquals(User.class, response.get(0).getClass());  // verifico se o item da lista é do tipo user
+        assertEquals(listUser.get(0).getName(), response.get(0).getName()); // verifico se o nome retornado é o esperado
+        assertEquals(listUser.get(0).getEmail(), response.get(0).getEmail());
+        assertEquals(listUser.get(0).getId(), response.get(0).getId());
+        assertEquals(2, response.size()); // verifico se retorna a quantidade determinada
+
+
+    }
+
+    @Test
+    void WhenCreateReturnSuccess(){
+        when(userRepository.save(any())).thenReturn(user);
+
+        User response =  userService.create(userDto);
+
+        assertNotNull(response);
+        assertEquals(User.class, response.getClass());
+        assertEquals(ID,response.getId());
+        assertEquals(NAME, response.getName());
+
+
     }
 
     private void startUser(){

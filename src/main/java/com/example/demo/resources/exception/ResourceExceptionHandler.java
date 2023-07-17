@@ -18,7 +18,7 @@ public class ResourceExceptionHandler
     // trazendo a exceção e quem gerou..
     // retornando a classe StandardErro
     @ExceptionHandler(ObjectNotFoundException.class)
-    public ResponseEntity<StandardError> objectNotFound(ObjectNotFoundException ex, HttpServletRequest request)
+    public ResponseEntity<StandardError> objectNotFoundException(ObjectNotFoundException ex, HttpServletRequest request)
     {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new StandardError(LocalDateTime.now(),
                                                                 ex.getMessage(),
@@ -27,7 +27,7 @@ public class ResourceExceptionHandler
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<StandardError> dataIntegrityViolation(DataIntegrityViolationException ex, HttpServletRequest request)
+    public ResponseEntity<StandardError> dataIntegrityViolationException(DataIntegrityViolationException ex, HttpServletRequest request)
     {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new StandardError(LocalDateTime.now(),
                 ex.getMessage(),
