@@ -9,7 +9,5 @@ import java.util.Optional;
 // este annotation tb permitira a injeção de dep[endencia em outraas classes
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-    static Optional<User> findByEmail(String email) {
-        return null;
-    }
+    Optional<User> findByEmail(String email) ;
 }

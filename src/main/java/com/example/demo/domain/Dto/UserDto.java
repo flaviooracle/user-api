@@ -11,7 +11,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UserDto {
-    private Integer id;
+    private Long id;
     private String name;
     private String email;
     // @JsonIgnore - ignora o get e o set

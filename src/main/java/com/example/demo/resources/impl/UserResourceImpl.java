@@ -7,13 +7,14 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static org.springframework.http.ResponseEntity.ok;
 
 @RequiredArgsConstructor
 @RestController
@@ -30,13 +31,12 @@ public class UserResourceImpl implements UserResource
     @Override
     public ResponseEntity<UserDto> findById(Long id) {
 
-        return ResponseEntity.ok().body(mapper.map(userService.findById(id),UserDto.class));
+        return ok().body(mapper.map(userService.findById(id),UserDto.class));
     }
 
     @Override
     public ResponseEntity<List<UserDto>> findAll() {
-        return ResponseEntity
-                .ok()
+        return ok()
                     .body(userService.findAll()
                         .stream()
                             .map(x -> mapper.map(x, UserDto.class)).collect(Collectors.toList()));
@@ -48,6 +48,17 @@ public class UserResourceImpl implements UserResource
                 .fromCurrentRequest().path("/{id}").buildAndExpand(userService.create(saveUserDto).getId()).toUri();
         return ResponseEntity
                 .created(uri).build();
+    }
+
+    @Override
+    public ResponseEntity<UserDto> update(@RequestBody UserDto userDto) {
+        return ResponseEntity.ok().body(mapper.map(userService.update(userDto), UserDto.class));
+    }
+
+    @Override
+    public ResponseEntity<UserDto> delete(@PathVariable Long id) {
+        userService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 
 

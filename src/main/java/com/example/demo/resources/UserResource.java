@@ -2,10 +2,7 @@ package com.example.demo.resources;
 
 import com.example.demo.domain.Dto.UserDto;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -19,4 +16,11 @@ public interface UserResource
 
     @PostMapping
     ResponseEntity<List<UserDto>> create(@RequestBody UserDto saveUserDto);
+
+    @PutMapping
+    ResponseEntity<UserDto> update(@RequestBody UserDto saveUserDto);
+
+    @DeleteMapping("/{id}")
+    ResponseEntity<UserDto> delete(@PathVariable Long id);
+
 }
