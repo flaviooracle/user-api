@@ -29,6 +29,8 @@ public class UserServiceImpl implements UserService
         var obj = userRepository.findById(id);
         return obj.orElseThrow(() -> new ObjectNotFoundException("Flavio, Não encontrei nada"));
     }
+    // Pegar uma classe do optimal -> obj.get()
+    // colocar a classe dentro do optimal -> Optional.of(obj);
 
     @Override
     public List<User> findAll() {

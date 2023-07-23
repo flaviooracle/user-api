@@ -3,6 +3,7 @@ package com.example.demo.services.impl;
 import com.example.demo.domain.Dto.UserDto;
 import com.example.demo.domain.User;
 import com.example.demo.repositories.UserRepository;
+import com.example.demo.resources.exception.DataIntegrityViolationException;
 import com.example.demo.services.exceptions.ObjectNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,6 +19,7 @@ import java.util.Optional;
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.anyLong;
 import static org.mockito.Mockito.when;
 
@@ -101,6 +103,27 @@ class UserServiceImplTest {
         when(userRepository.save(any())).thenReturn(user);
 
         User response =  userService.create(userDto);
+
+        assertNotNull(response);
+        assertEquals(User.class, response.getClass());
+        assertEquals(ID,response.getId());
+        assertEquals(NAME, response.getName());
+
+
+    }
+
+    @Test
+    void WhenCreateReturnAnDataIntegrityViolationException(){
+        when(userRepository.findByEmail(anyString())).thenReturn(optionalUser);
+
+        try{
+            User response =  userService.create(userDto);
+        }
+        catch(Exception ex){
+            assertEquals(DataIntegrityViolationException.class, ex.getClass());
+
+        }
+
 
         assertNotNull(response);
         assertEquals(User.class, response.getClass());
